@@ -9,30 +9,31 @@ struct CountsByUsage {
 
 struct CountsByUsage countBatteriesByUsage(const int* cycles, int nBatteries) {
   struct CountsByUsage counts = {0, 0, 0};
+  int i,m,l,h;
+  m=l=h=0;
+  for(i=0;i<nBatteries;i++){
+    if(cycles[i]<=410){
+      (counts.lowCount)++;
+    }
+    else if(cycles[i]>410 && cycles[i]<950){
+      (counts.mediumCount)++;
+    }
+    else{
+      (counts.highCount)++;
+    }
+  }
   return counts;
 }
 
 void testBucketingByNumberOfCycles() {
-  const int chargeCycleCounts[] = {100, 300, 500, 600, 900, 1000};
+  const int chargeCycleCounts[] = {100, 300, 500, 600, 900, 1000, 949, 950, 410};
   const int numberOfBatteries = sizeof(chargeCycleCounts) / sizeof(chargeCycleCounts[0]);
-  int i;
   printf("Counting batteries by usage cycles...\n");
   struct CountsByUsage counts = countBatteriesByUsage(chargeCycleCounts, numberOfBatteries);
-  for(i=0;i<numberOfBatteries;i++)
-  {
-    if(chargeCycleCounts[i]<410)
-      counts.lowCount++;
-    else if(chargeCycleCounts[i]>=410 && chargeCycleCounts[i]<950)
-      counts.mediumCount++;
-    else if(chargeCycleCounts[i]>=950)
-      counts.highCount++;
-  }
+  assert(counts.lowCount == 3);
+  assert(counts.mediumCount == 4);
+  assert(counts.highCount == 2);
   printf("Done counting :)\n");
-  printf("Number of low usage batteries: %d\n",counts.lowCount);
-  printf("Number of medium usage batteries: %d\n",counts.mediumCount);
-  printf("Number of high usage batteries: %d\n",counts.highCount);
-}
-
 }
 
 int main() {
